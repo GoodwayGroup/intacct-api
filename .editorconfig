@@ -1,0 +1,25 @@
+root = true
+  
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+quote_type = single
+  
+[Makefile]
+indent_style = tab
+  
+[*.js]
+space_after_control_statements = true
+space_after_anonymous_functions = true
+spaces_around_operators = true
+spaces_in_brackets = hybrid
+  
+[package.json]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false

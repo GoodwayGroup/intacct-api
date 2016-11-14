@@ -1,0 +1,39 @@
+{
+  "name": "intacct-api",
+  "version": "1.0.0",
+  "description": "Intacct API Access Library",
+  "engines": {
+    "node": ">=4"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/jasmine",
+    "prepublish": "npm run build",
+    "build": "npm run build:clean; npm run build:compile",
+    "build:compile": "./node_modules/.bin/babel src -s inline -d dist",
+    "build:clean": "rm -rf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GoodwayGroup/intacct-api.git"
+  },
+  "author": "Julian Lannigan <julian.lannigan@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GoodwayGroup/intacct-api/issues"
+  },
+  "homepage": "https://github.com/GoodwayGroup/intacct-api#readme",
+  "dependencies": {
+    "node-uuid": "^1.4.7",
+    "xmlbuilder": "^8.2.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-eslint": "^7.1.0",
+    "babel-preset-goodway": "git+ssh://git@github.com/GoodwayGroup/babel-preset-goodway.git",
+    "babel-register": "^6.18.0",
+    "eslint-config-goodway": "git+ssh://git@github.com/GoodwayGroup/eslint-config-goodway.git",
+    "jasmine": "^2.5.2",
+    "jasmine-core": "^2.5.2"
+  }
+}
