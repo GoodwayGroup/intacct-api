@@ -1,5 +1,6 @@
 import * as xmlbuilder from 'xmlbuilder';
 import * as validation from './validation';
+import { validate } from 'joi';
 import { AuthControl } from './auth_control';
 import { ControlFunction } from './control_function';
 import { FUNCTION_NAMES } from './constants';
@@ -7,10 +8,13 @@ import { v1 } from 'uuid';
 
 class IntacctApi {
     constructor(params) {
-        if (params.auth) {
-            this.auth = new AuthControl(params.auth);
+        const result = validate(params, validation.intacctConstructor);
+
+        if (result.error) {
+            throw result.error;
         }
 
+        this.auth = new AuthControl(params.auth);
         this.assignControlId(params.controlId);
     }
 
