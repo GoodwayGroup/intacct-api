@@ -1,10 +1,10 @@
 import * as xmlbuilder from 'xmlbuilder';
-import * as validation from './validation';
 import { validate } from 'joi';
+import { v1 } from 'uuid';
+import * as validation from './validation';
 import { AuthControl } from './auth_control';
 import { ControlFunction } from './control_function';
 import { FUNCTION_NAMES } from './constants';
-import { v1 } from 'uuid';
 
 class IntacctApi {
     constructor(params) {
@@ -40,15 +40,19 @@ class IntacctApi {
     }
 
     createRequestBody(controlFunctions) {
-        let root = xmlbuilder.create('request', {version: '1.0', encoding: 'UTF-8', standalone: true});
+        const root = xmlbuilder.create('request', {
+            version: '1.0',
+            encoding: 'UTF-8',
+            standalone: true
+        });
 
         this.createControl(root);
 
-        let operation = root.ele('operation');
+        const operation = root.ele('operation');
 
         this.auth.toXML(operation);
 
-        let content = operation.ele('content');
+        const content = operation.ele('content');
 
         controlFunctions.forEach((controlFunc) => {
             controlFunc.toXML(content);
@@ -58,20 +62,20 @@ class IntacctApi {
     }
 
     createRequestBodyNoPasswords(controlFunctions) {
-        let out = this.createRequestBody(controlFunctions);
+        const out = this.createRequestBody(controlFunctions);
 
         return out.replace(/<password>(.+)<\/password>/g, '<password>REDACTED</password>');
     }
 }
 
-function __createFactory(name) {
-    return (params) => {
+function createFactory(name) {
+    return function controlFunction(params) {
         return new ControlFunction(name, params);
-    }
+    };
 }
 
 FUNCTION_NAMES.forEach((name) => {
-    IntacctApi[name] = __createFactory(name);
+    IntacctApi[name] = createFactory(name);
 });
 
 export default {

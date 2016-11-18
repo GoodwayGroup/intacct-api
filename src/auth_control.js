@@ -41,4 +41,4 @@ class AuthControl {
 
 export default {
     AuthControl
-}
+};
