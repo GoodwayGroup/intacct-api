@@ -3,7 +3,7 @@ machine:
         version: 4
 dependencies:
     pre:
-        - "npm set progress=false"
+        - "npm config -g set progress=false"
 test:
     pre:
         - "npm run lint"
