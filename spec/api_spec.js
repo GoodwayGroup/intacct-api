@@ -13,7 +13,7 @@ describe('Public Interface', () => {
                 }
             });
 
-            expect(obj.auth instanceof AuthControl).toBe(true);
+            expect(obj.auth).toEqual(jasmine.any(AuthControl));
             expect(obj.auth.senderId).toBe('test');
             expect(obj.auth.senderPassword).toBe('pass');
             expect(obj.auth.sessionId).toBe('testSession');
@@ -47,11 +47,11 @@ describe('Public Interface', () => {
     describe('FunctionControl factory methods', () => {
         function testFactory(name) {
             return () => {
-                expect(IntacctApi[name] instanceof Function).toBe(true);
+                expect(IntacctApi[name]).toEqual(jasmine.any(Function));
 
                 const control = IntacctApi[name]({});
 
-                expect(control instanceof ControlFunction).toBe(true);
+                expect(control).toEqual(jasmine.any(ControlFunction));
             };
         }
 

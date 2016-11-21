@@ -8,7 +8,7 @@ describe('ControlFunction class', () => {
             param: true
         }, 'controlid');
 
-        expect(obj instanceof ControlFunction).toBe(true);
+        expect(obj).toEqual(jasmine.any(ControlFunction));
         expect(obj.name).toBe('test');
         expect(obj.parameters).toEqual({ param: true });
         expect(obj.controlId).toBe('controlid');
