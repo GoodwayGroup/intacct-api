@@ -1,3 +1,8 @@
 {
-    "presets": ["goodway"]
+    "presets": ["goodway"],
+    "env": {
+        "test": {
+            "plugins": ["istanbul"]
+        }
+    }
 }
