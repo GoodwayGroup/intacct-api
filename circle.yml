@@ -1,11 +1,9 @@
-general:
-    artifacts:
-        - "coverage"
-
 machine:
     node:
         version: 4
-
 test:
     pre:
-        - npm run lint
+        - "npm config set progress=false"
+        - "npm run lint"
+    post:
+        - "cp -r coverage/* $CIRCLE_TEST_REPORTS/"
