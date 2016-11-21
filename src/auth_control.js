@@ -21,7 +21,7 @@ class AuthControl {
 
         if (this.authType === 'session') {
             auth = {
-                sessionid: this.sessionId;
+                sessionid: this.sessionId
             };
         } else {
             auth = {
@@ -41,4 +41,4 @@ class AuthControl {
 
 export default {
     AuthControl
-}
+};

@@ -1,10 +1,10 @@
 import * as xmlbuilder from 'xmlbuilder';
-import * as validation from './validation';
 import { validate } from 'joi';
+import { v1 } from 'uuid';
+import * as validation from './validation';
 import { AuthControl } from './auth_control';
 import { ControlFunction } from './control_function';
 import { FUNCTION_NAMES } from './constants';
-import { v1 } from 'uuid';
 
 class IntacctApi {
     constructor(params) {
@@ -14,8 +14,10 @@ class IntacctApi {
             throw result.error;
         }
 
-        this.auth = new AuthControl(params.auth);
-        this.assignControlId(params.controlId);
+        this.auth = new AuthControl(result.value.auth);
+        this.assignControlId(result.value.controlId);
+        this.uniqueId = result.value.uniqueId;
+        this.dtdVersion = result.value.dtdVersion;
     }
 
     assignControlId(controlId = null) {
@@ -40,17 +42,31 @@ class IntacctApi {
     }
 
     createRequestBody(controlFunctions) {
-        let root = xmlbuilder.create('request', {version: '1.0', encoding: 'UTF-8', standalone: true});
+        let funcs = controlFunctions;
+
+        if (Array.isArray(funcs) === false) {
+            funcs = [controlFunctions];
+        }
+
+        const root = xmlbuilder.create('request', {
+            version: '1.0',
+            encoding: 'UTF-8',
+            standalone: true
+        });
 
         this.createControl(root);
 
-        let operation = root.ele('operation');
+        const operation = root.ele('operation');
 
         this.auth.toXML(operation);
 
-        let content = operation.ele('content');
+        const content = operation.ele('content');
 
-        controlFunctions.forEach((controlFunc) => {
+        funcs.forEach((controlFunc) => {
+            if (typeof controlFunc.toXML !== 'function') {
+                throw new Error('Not a valid control function. Use the static methods to generate proper control functions.');
+            }
+
             controlFunc.toXML(content);
         });
 
@@ -58,20 +74,20 @@ class IntacctApi {
     }
 
     createRequestBodyNoPasswords(controlFunctions) {
-        let out = this.createRequestBody(controlFunctions);
+        const out = this.createRequestBody(controlFunctions);
 
         return out.replace(/<password>(.+)<\/password>/g, '<password>REDACTED</password>');
     }
 }
 
-function __createFactory(name) {
-    return (params) => {
-        return new ControlFunction(name, params);
-    }
+function createFactory(name) {
+    return function controlFunction(params, controlId) {
+        return new ControlFunction(name, params, controlId);
+    };
 }
 
 FUNCTION_NAMES.forEach((name) => {
-    IntacctApi[name] = __createFactory(name);
+    IntacctApi[name] = createFactory(name);
 });
 
 export default {
