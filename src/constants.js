@@ -18,4 +18,4 @@ const FUNCTION_NAMES = [
 
 export default {
     FUNCTION_NAMES
-}
+};

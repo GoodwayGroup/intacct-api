@@ -14,8 +14,10 @@ class IntacctApi {
             throw result.error;
         }
 
-        this.auth = new AuthControl(params.auth);
-        this.assignControlId(params.controlId);
+        this.auth = new AuthControl(result.value.auth);
+        this.assignControlId(result.value.controlId);
+        this.uniqueId = result.value.uniqueId;
+        this.dtdVersion = result.value.dtdVersion;
     }
 
     assignControlId(controlId = null) {
