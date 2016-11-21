@@ -1,0 +1,11 @@
+general:
+    artifacts:
+        - "coverage"
+
+machine:
+    node:
+        version: 4
+
+test:
+    pre:
+        npm run lint
