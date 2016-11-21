@@ -42,6 +42,12 @@ class IntacctApi {
     }
 
     createRequestBody(controlFunctions) {
+        let funcs = controlFunctions;
+
+        if (Array.isArray(funcs) === false) {
+            funcs = [controlFunctions];
+        }
+
         const root = xmlbuilder.create('request', {
             version: '1.0',
             encoding: 'UTF-8',
@@ -56,7 +62,11 @@ class IntacctApi {
 
         const content = operation.ele('content');
 
-        controlFunctions.forEach((controlFunc) => {
+        funcs.forEach((controlFunc) => {
+            if (typeof controlFunc.toXML !== 'function') {
+                throw new Error('Not a valid control function. Use the static methods to generate proper control functions.');
+            }
+
             controlFunc.toXML(content);
         });
 
@@ -71,8 +81,8 @@ class IntacctApi {
 }
 
 function createFactory(name) {
-    return function controlFunction(params) {
-        return new ControlFunction(name, params);
+    return function controlFunction(params, controlId) {
+        return new ControlFunction(name, params, controlId);
     };
 }
 
