@@ -1,8 +1,9 @@
 machine:
     node:
         version: 4
-    post:
-        - "npm config set progress=false"
+dependencies:
+    pre:
+        - "npm set progress=false"
 test:
     pre:
         - "npm run lint"
