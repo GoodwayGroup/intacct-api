@@ -1,7 +1,7 @@
 machine:
     node:
         version: 4
-    pre:
+    post:
         - "npm config set progress=false"
 test:
     pre:
