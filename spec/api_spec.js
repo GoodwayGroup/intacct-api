@@ -63,6 +63,22 @@ describe('Public Interface', () => {
                 controlId: 'cid'
             }));
         });
+
+        it('handles configuration errors and throws appropriately', () => {
+            function container() {
+                // eslint-disable-next-line no-unused-vars
+                const obj = new IntacctApi({
+                    auth: {
+                        senderId: 'test',
+                        senderPassword: 'pass',
+                        userId: 'user',
+                        sessionId: 'session'
+                    }
+                });
+            }
+
+            expect(container).toThrow();
+        });
     });
 
     describe('FunctionControl factory methods', () => {
