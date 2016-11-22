@@ -1,7 +1,7 @@
 import { v1 } from 'uuid';
 
 class ControlFunction {
-    constructor(name, params = {}, controlId = null) {
+    constructor(name, params = {}, controlId) {
         if (!name) {
             throw new Error('Missing control function name');
         }

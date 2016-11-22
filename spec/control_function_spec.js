@@ -41,7 +41,8 @@ describe('ControlFunction class', () => {
 
     it('should error when no name is given', () => {
         const container = function container() {
-            ControlFunction();
+            const obj = new ControlFunction();
+            expect(obj).toBeNull(); // this assertion should never run
         };
 
         expect(container).toThrow();
