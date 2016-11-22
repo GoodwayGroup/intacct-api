@@ -4,6 +4,7 @@ machine:
 dependencies:
     pre:
         - "npm config -g set progress=false"
+        - "npm install -g npm"
 test:
     pre:
         - "npm run lint"
