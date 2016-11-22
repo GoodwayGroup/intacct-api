@@ -10,3 +10,4 @@ test:
         - "npm run lint"
     post:
         - "cp -r coverage/* $CIRCLE_TEST_REPORTS/"
+        - "bash <(curl -s https://codecov.io/bash)"
