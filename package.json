@@ -26,7 +26,7 @@
   "homepage": "https://github.com/GoodwayGroup/intacct-api#readme",
   "dependencies": {
     "joi": "^9.2.0",
-    "uuid": "^2.0.3",
+    "uuid": "^3.0.0",
     "xmlbuilder": "^8.2.2"
   },
   "devDependencies": {
