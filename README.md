@@ -1,5 +1,8 @@
 # intacct-api
 
+[![CircleCI](https://img.shields.io/circleci/project/github/GoodwayGroup/intacct-api.svg)](https://circleci.com/gh/GoodwayGroup/intacct-api)
+[![Codecov](https://img.shields.io/codecov/c/github/GoodwayGroup/intacct-api.svg)](https://codecov.io/github/GoodwayGroup/intacct-api)
+
 ## IntacctApi(options)
 
 ### options
