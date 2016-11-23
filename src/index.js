@@ -5,8 +5,11 @@ import * as validation from './validation';
 import { AuthControl } from './auth_control';
 import { ControlFunction } from './control_function';
 import { FUNCTION_NAMES } from './constants';
+import * as requestUtil from './request';
 
 class IntacctApi {
+    endpoint = 'https://api.intacct.com/ia/xml/xmlgw.phtml'
+
     constructor(params) {
         const result = validate(params, validation.intacctConstructor);
 
@@ -18,6 +21,7 @@ class IntacctApi {
         this.assignControlId(result.value.controlId);
         this.uniqueId = result.value.uniqueId;
         this.dtdVersion = result.value.dtdVersion;
+        this.timeout = result.value.timeout;
     }
 
     assignControlId(controlId = null) {
@@ -26,19 +30,6 @@ class IntacctApi {
         } else {
             this.controlId = v1();
         }
-    }
-
-    createControl(root) {
-        return root.ele({
-            control: {
-                senderid: this.auth.senderId,
-                password: this.auth.senderPassword,
-                controlid: this.controlId,
-                uniqueid: this.uniqueId.toString(),
-                dtdversion: this.dtdVersion,
-                includewhitespace: 'false'
-            }
-        });
     }
 
     createRequestBody(controlFunctions) {
@@ -54,7 +45,7 @@ class IntacctApi {
             standalone: true
         });
 
-        this.createControl(root);
+        requestUtil.createControl(this, root);
 
         const operation = root.ele('operation');
 
@@ -76,7 +67,38 @@ class IntacctApi {
     createRequestBodyNoPasswords(controlFunctions) {
         const out = this.createRequestBody(controlFunctions);
 
-        return out.replace(/<password>(.+)<\/password>/g, '<password>REDACTED</password>');
+        return out.replace(/<password>(.+?)<\/password>/g, '<password>REDACTED</password>');
+    }
+
+    async request(controlFunctions) {
+        if (!controlFunctions) {
+            throw new Error('Must provide at least one control function.');
+        }
+
+        const funcHash = requestUtil.createHashOfControlFunctions(controlFunctions);
+        const requestBody = this.createRequestBody(controlFunctions);
+
+        const result = await requestUtil.post(this.endpoint, {
+            payload: requestBody,
+            headers: {
+                'Content-Type': 'x-intacct-xml-request'
+            }
+        });
+
+        let parsedPayload;
+        const rawPayload = result.payload.toString();
+
+        try {
+            parsedPayload = await requestUtil.parseString(rawPayload);
+        } catch (e) {
+            console.log(e);
+        }
+
+        return {
+            functions: funcHash,
+            payload: parsedPayload,
+            rawPayload
+        };
     }
 }
 

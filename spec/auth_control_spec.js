@@ -50,7 +50,7 @@ describe('Auth Control class', () => {
         const root = xmlbuilder.begin();
         const xml = obj.toXML(root).end();
 
-        expect(xml).toEqual('<authenication><sessionid>id</sessionid></authenication>');
+        expect(xml).toEqual('<authentication><sessionid>id</sessionid></authentication>');
     });
 
     it('should construct xml with login type', () => {
@@ -58,7 +58,7 @@ describe('Auth Control class', () => {
         const root = xmlbuilder.begin();
         const xml = obj.toXML(root).end();
 
-        expect(xml).toMatch(/<authenication><login>.*<\/login><\/authenication>/);
+        expect(xml).toMatch(/<authentication><login>.*<\/login><\/authentication>/);
         expect(xml).toMatch(/<userid>uid<\/userid>/);
         expect(xml).toMatch(/<companyid>cid<\/companyid>/);
         expect(xml).toMatch(/<password>pass<\/password>/);

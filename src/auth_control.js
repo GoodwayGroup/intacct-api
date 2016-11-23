@@ -34,7 +34,7 @@ class AuthControl {
         }
 
         return root.ele({
-            authenication: auth
+            authentication: auth
         });
     }
 }
