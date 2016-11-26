@@ -91,8 +91,13 @@ class IntacctApi {
         try {
             parsedPayload = await requestUtil.parseString(rawPayload);
         } catch (e) {
-            console.log(e);
+            e.rawPayload = rawPayload;
+            throw e;
         }
+
+        parsedPayload.response.operation[0].result.forEach((resFunc) => {
+            funcHash[resFunc.controlid[0]].data = resFunc;
+        });
 
         return {
             functions: funcHash,

@@ -20,6 +20,11 @@ class ControlFunction {
         }
     }
 
+    get(path) {
+        // hoek reach
+        return this.data[path];
+    }
+
     toXML(root) {
         const elements = {
             function: {
