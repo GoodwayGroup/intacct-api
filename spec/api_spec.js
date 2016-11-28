@@ -1,5 +1,4 @@
 import * as Joi from 'joi';
-import * as xmlbuilder from 'xmlbuilder';
 import { IntacctApi } from '../index';
 import { AuthControl } from '../src/auth_control';
 import { ControlFunction } from '../src/control_function';
@@ -94,20 +93,6 @@ describe('Public Interface', () => {
         });
     });
 
-    it('Create control portion of request xml', () => {
-        const obj = sessionApi();
-        const root = xmlbuilder.begin();
-        const xml = obj.createControl(root).end();
-
-        expect(xml).toMatch(/<control>.*<\/control>/);
-        expect(xml).toMatch(/<senderid>test<\/senderid>/);
-        expect(xml).toMatch(/<password>pass<\/password>/);
-        expect(xml).toMatch(/<controlid>cid<\/controlid>/);
-        expect(xml).toMatch(/<uniqueid>false<\/uniqueid>/);
-        expect(xml).toMatch(/<dtdversion>3.0<\/dtdversion>/);
-        expect(xml).toMatch(/<includewhitespace>false<\/includewhitespace>/);
-    });
-
     describe('Request Body generation', () => {
         it('should properly generate', () => {
             const obj = sessionApi();
@@ -118,7 +103,7 @@ describe('Public Interface', () => {
             ]);
 
             // confirm structure
-            expect(xml).toMatch(/<\?xml.+\?><request><control>.+<\/control><operation><authenication>.+<\/authenication><content>.+<\/content><\/operation><\/request>/);
+            expect(xml).toMatch(/<\?xml.+\?><request><control>.+<\/control><operation><authentication>.+<\/authentication><content>.+<\/content><\/operation><\/request>/);
 
             // verify functions
             expect(xml).toMatch('<function controlid="id1"><create><key1>val1</key1></create></function>');
@@ -146,6 +131,23 @@ describe('Public Interface', () => {
 
             expect(shouldFailSingle).toThrow();
             expect(shouldFailArray).toThrow();
+        });
+
+        it('should generate with passwords redacted', () => {
+            const obj = new IntacctApi({
+                auth: {
+                    senderId: 'test',
+                    senderPassword: 'pass',
+                    companyId: 'company',
+                    userId: 'user',
+                    password: 'pass'
+                }
+            });
+
+            const xml = obj.createRequestBodyNoPasswords([]);
+
+            expect(xml).not.toMatch(/<password>pass<\/password>/);
+            expect(xml).toMatch(/.+<password>REDACTED<\/password>.+<password>REDACTED<\/password>.+/);
         });
     });
 });

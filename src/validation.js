@@ -16,6 +16,7 @@ export default {
         }).xor('sessionId', 'userId').with('userId', 'companyId', 'password'),
         controlId: Joi.string().optional(),
         uniqueId: Joi.boolean().default(false),
-        dtdVersion: Joi.string().valid(['2.1', '3.0']).default('3.0')
+        dtdVersion: Joi.string().valid(['2.1', '3.0']).default('3.0'),
+        timeout: Joi.number().min(10).default(5000)
     })
 };
