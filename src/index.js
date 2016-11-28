@@ -1,11 +1,15 @@
 import * as xmlbuilder from 'xmlbuilder';
 import { validate } from 'joi';
 import { v1 } from 'uuid';
+import { reach } from 'hoek';
 import * as validation from './validation';
 import { AuthControl } from './auth_control';
 import { ControlFunction } from './control_function';
 import { FUNCTION_NAMES } from './constants';
 import * as requestUtil from './request';
+import { errormessage } from './parser';
+
+const flatten = require('lodash.flatten');
 
 class IntacctApi {
     endpoint = 'https://api.intacct.com/ia/xml/xmlgw.phtml'
@@ -70,13 +74,14 @@ class IntacctApi {
         return out.replace(/<password>(.+?)<\/password>/g, '<password>REDACTED</password>');
     }
 
-    async request(controlFunctions) {
+    async request(...controlFunctions) {
         if (!controlFunctions) {
             throw new Error('Must provide at least one control function.');
         }
 
-        const funcHash = requestUtil.createHashOfControlFunctions(controlFunctions);
-        const requestBody = this.createRequestBody(controlFunctions);
+        const ctrlFuncs = flatten(controlFunctions);
+        const funcHash = requestUtil.createHashOfControlFunctions(ctrlFuncs);
+        const requestBody = this.createRequestBody(ctrlFuncs);
 
         const result = await requestUtil.post(this.endpoint, {
             payload: requestBody,
@@ -95,9 +100,23 @@ class IntacctApi {
             throw e;
         }
 
-        parsedPayload.response.operation[0].result.forEach((resFunc) => {
-            funcHash[resFunc.controlid[0]].data = resFunc;
-        });
+        const isAuthenticated = reach(parsedPayload, 'response.operation.0.authentication.0.status.0') === 'success';
+
+        if (!isAuthenticated) {
+            const authErrorData = errormessage(reach(parsedPayload, 'response.operation.0.errormessage.0'))[0];
+            const error = new Error(`Auth Error: ${authErrorData.errorno}: ${authErrorData.description}${authErrorData.description2}`);
+
+            Object.assign(error, authErrorData);
+            throw error;
+        }
+
+        const results = reach(parsedPayload, 'response.operation.0.result');
+
+        if (Array.isArray(results)) {
+            results.forEach((resFunc) => {
+                funcHash[resFunc.controlid[0]].process(resFunc);
+            });
+        }
 
         return {
             functions: funcHash,

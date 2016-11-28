@@ -17,3 +17,11 @@
 * [controlId] - defaults to v1 uuid
 * [uniqueId] - boolean
 * [dtdVersion] - defaults to '3.0'
+
+### .request([controlFunctions])
+
+Make a request to Intacct's API to fulfill the given control functions.
+
+## Static Functions
+
+### .create(params, [controlId])
