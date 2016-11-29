@@ -68,6 +68,6 @@
     "sourceMap": false,
     "instrument": false,
     "cache": true,
-    "check-coverage": true
+    "check-coverage": false
   }
 }

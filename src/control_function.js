@@ -1,6 +1,7 @@
 import { v1 } from 'uuid';
 import { reach, transform } from 'hoek';
 import * as parsers from './parser';
+import { FUNCTION_PARAM_DEFAULTS } from './constants';
 
 class ControlFunction {
     constructor(name, params = {}, controlId, parse = true) {
@@ -9,8 +10,13 @@ class ControlFunction {
         }
 
         this.name = name;
-        this.parameters = params;
         this.parse = parse;
+
+        if (FUNCTION_PARAM_DEFAULTS[name]) {
+            this.parameters = Object.assign({}, FUNCTION_PARAM_DEFAULTS[name], params);
+        } else {
+            this.parameters = params;
+        }
 
         this.assignControlId(controlId);
     }

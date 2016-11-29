@@ -1,7 +1,11 @@
 import { inspect } from './inspect';
-import { errormessage } from './errormessage';
+import { errormessage } from './error_message';
+import { read } from './read';
 
 export default {
     inspect,
-    errormessage
+    errormessage,
+    read,
+    readByQuery: read,
+    readByName: read
 };

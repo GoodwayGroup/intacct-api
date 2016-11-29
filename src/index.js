@@ -11,6 +11,13 @@ import { errormessage } from './parser';
 
 const flatten = require('lodash.flatten');
 
+function throwError(prefix, errorData) {
+    const error = new Error(`${prefix}: ${errorData.errorno}: ${errorData.description}${errorData.description2}`);
+
+    Object.assign(error, errorData);
+    throw error;
+}
+
 class IntacctApi {
     endpoint = 'https://api.intacct.com/ia/xml/xmlgw.phtml'
 
@@ -100,14 +107,18 @@ class IntacctApi {
             throw e;
         }
 
+        const isControlSuccessful = reach(parsedPayload, 'response.control.0.status.0') === 'success';
+
+        if (!isControlSuccessful) {
+            const authErrorData = errormessage(reach(parsedPayload, 'response.errormessage'))[0];
+            throwError('Request Error', authErrorData);
+        }
+
         const isAuthenticated = reach(parsedPayload, 'response.operation.0.authentication.0.status.0') === 'success';
 
         if (!isAuthenticated) {
             const authErrorData = errormessage(reach(parsedPayload, 'response.operation.0.errormessage.0'))[0];
-            const error = new Error(`Auth Error: ${authErrorData.errorno}: ${authErrorData.description}${authErrorData.description2}`);
-
-            Object.assign(error, authErrorData);
-            throw error;
+            throwError('Auth Error', authErrorData);
         }
 
         const results = reach(parsedPayload, 'response.operation.0.result');
