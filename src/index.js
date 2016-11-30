@@ -148,5 +148,6 @@ FUNCTION_NAMES.forEach((name) => {
 });
 
 export default {
-    IntacctApi
+    IntacctApi,
+    ControlFunction
 };
