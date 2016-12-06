@@ -10,7 +10,10 @@ class ControlFunction {
         }
 
         this.name = name;
-        this.parse = parse;
+
+        if (parse) {
+            this.parse = parsers[name] || null;
+        }
 
         if (FUNCTION_PARAM_DEFAULTS[name]) {
             this.parameters = Object.assign({}, FUNCTION_PARAM_DEFAULTS[name], params);
@@ -50,8 +53,8 @@ class ControlFunction {
             this.result.errors = parsers.errormessage.call(this, result.errormessage);
         }
 
-        if (overallStatus && this.parse && parsers[this.name]) {
-            this.data = parsers[this.name].call(this, result.data);
+        if (overallStatus && this.parse) {
+            this.data = this.parse.call(this, result.data);
         } else {
             this.data = result.data;
         }

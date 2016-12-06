@@ -47,4 +47,66 @@ describe('ControlFunction class', () => {
 
         expect(container).toThrow();
     });
+
+    it('#isSuccessful() === true', () => {
+        const obj = new ControlFunction('test');
+
+        obj.result = { status: 'success' };
+
+        expect(obj.isSuccessful()).toBe(true);
+    });
+
+    it('#isSuccessful() === false', () => {
+        const obj = new ControlFunction('test');
+
+        expect(obj.isSuccessful()).toBe(false);
+
+        obj.result = { status: 'failure' };
+
+        expect(obj.isSuccessful()).toBe(false);
+    });
+
+    it('#get()', () => {
+        const obj = new ControlFunction('test');
+        const data = { prop: 'val' };
+
+        obj.data = data;
+
+        expect(obj.get()).toBe(data);
+    });
+
+    it('#get(\'prop.subprop\')', () => {
+        const obj = new ControlFunction('test');
+        const data = { prop: { subprop: 'val' } };
+
+        obj.data = data;
+
+        expect(obj.get('prop.subprop')).toEqual('val');
+    });
+
+    it('#process() with parse', () => {
+        const obj = new ControlFunction('test');
+        obj.parse = result => result;
+
+        spyOn(obj, 'parse').and.callThrough();
+
+        obj.process({
+            status: ['success'],
+            function: ['test'],
+            controlid: [obj.controlId],
+            data: {
+                prop: 'val'
+            }
+        });
+
+        expect(obj.parse).toHaveBeenCalledTimes(1);
+        expect(obj.result).toEqual(jasmine.objectContaining({
+            status: 'success',
+            function: 'test',
+            controlid: obj.controlId
+        }));
+    });
+
+    it('#process() with no parse');
+    it('#process() with error');
 });
