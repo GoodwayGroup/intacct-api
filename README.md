@@ -89,3 +89,17 @@ Refer to [Intacct's API Documentation](https://developer.intacct.com/wiki/functi
 * .readReport(...)
 * .readView(...)
 * .update(...)
+
+## Static Function: readMore
+
+This static function is special in that, instead of passing a parameters object to it, you can pass it a successful ControlFunction. This is important because to paginate using Intacct's API, you have to pass it a cursor they understand. Passing the successful ControlFunction allows this function to properly construct a readMore control function for you to then request. See this example:
+
+```javascript
+const cid1 = IntacctApi.readByQuery({ object: 'PROJECT', pagesize: 1 });
+
+const result1 = await obj.request(cid1);
+
+const cid2 = IntacctApi.readMore(cid1);
+
+const result2 = await obj.request(cid2);
+```
