@@ -7,5 +7,6 @@ export default {
     errormessage,
     read,
     readByQuery: read,
-    readByName: read
+    readByName: read,
+    readMore: read
 };

@@ -147,6 +147,20 @@ FUNCTION_NAMES.forEach((name) => {
     IntacctApi[name] = createFactory(name);
 });
 
+IntacctApi.readMore = (params, controlId) => {
+    if (params instanceof ControlFunction) {
+        const resultId = reach(params, 'data.$.resultId');
+
+        if (params.isSuccessful() && resultId) {
+            // do something great
+            return new ControlFunction('readMore', { resultId }, controlId);
+        }
+        throw new Error('ControlFunction passed to readMore is not in a success state or doesn\'t have a resultId');
+    }
+
+    return new ControlFunction('readMore', params, controlId);
+};
+
 export default {
     IntacctApi,
     ControlFunction
