@@ -6,7 +6,8 @@ function read(data) {
     const list = data[0][attr.listtype];
 
     res.$ = attr;
-    res[attr.listtype] = list.map(recursivelyCleanArray);
+
+    res[attr.listtype] = list ? list.map(recursivelyCleanArray) : [];
 
     return res;
 }
