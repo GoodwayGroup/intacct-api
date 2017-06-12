@@ -33,7 +33,6 @@ class IntacctApi {
         this.uniqueId = result.value.uniqueId;
         this.dtdVersion = result.value.dtdVersion;
         this.timeout = result.value.timeout;
-
     }
 
     assignControlId(controlId = null) {
@@ -87,7 +86,6 @@ class IntacctApi {
             throw new Error('Must provide at least one control function.');
         }
 
-       
         const ctrlFuncs = flatten(controlFunctions);
         const funcHash = requestUtil.createHashOfControlFunctions(ctrlFuncs);
         const requestBody = this.createRequestBody(ctrlFuncs);
@@ -98,7 +96,6 @@ class IntacctApi {
                 'Content-Type': 'x-intacct-xml-request'
             }
         });
-        
         let parsedPayload;
         const rawPayload = result.payload.toString();
 
@@ -114,49 +111,11 @@ class IntacctApi {
                 throw e;
             }
         }
-        
         return {
             functions: funcHash,
             payload: parsedPayload,
-            rawPayload: rawPayload
+            rawPayload
         };
-        
-
-        
-        /*
-        let parsedPayload;
-        const rawPayload = result.payload.toString();
-
-        try {
-            parsedPayload = await requestUtil.parseString(rawPayload);
-        } catch (e) {
-            e.rawPayload = rawPayload;
-            throw e;
-        }
-
-        const isControlSuccessful = reach(parsedPayload, 'response.control.0.status.0') === 'success';
-
-        if (!isControlSuccessful) {
-            const authErrorData = errormessage(reach(parsedPayload, 'response.errormessage'))[0];
-            throwError('Request Error', authErrorData);
-        }
-
-        const isAuthenticated = reach(parsedPayload, 'response.operation.0.authentication.0.status.0') === 'success';
-
-        if (!isAuthenticated) {
-            const authErrorData = errormessage(reach(parsedPayload, 'response.operation.0.errormessage.0'))[0];
-            throwError('Auth Error', authErrorData);
-        }
-
-        const results = reach(parsedPayload, 'response.operation.0.result');
-
-        if (Array.isArray(results)) {
-            results.forEach((resFunc) => {
-                funcHash[resFunc.controlid[0]].process(resFunc);
-            });
-        }
-        */
-        
     }
 }
 
