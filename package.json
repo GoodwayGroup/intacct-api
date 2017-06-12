@@ -9,7 +9,7 @@
   "scripts": {
     "test": "cross-env BABEL_ENV=test nyc jasmine",
     "prepublish": "npm run build",
-    "postinstall": "npm run build",
+    "build": "npm run build:clean; npm run build:compile",
     "build:compile": "./node_modules/.bin/babel src -s inline -d dist",
     "build:clean": "rm -rf dist",
     "lint": "eslint ."
