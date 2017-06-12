@@ -33,6 +33,7 @@ class IntacctApi {
         this.uniqueId = result.value.uniqueId;
         this.dtdVersion = result.value.dtdVersion;
         this.timeout = result.value.timeout;
+
     }
 
     assignControlId(controlId = null) {
@@ -86,6 +87,7 @@ class IntacctApi {
             throw new Error('Must provide at least one control function.');
         }
 
+       
         const ctrlFuncs = flatten(controlFunctions);
         const funcHash = requestUtil.createHashOfControlFunctions(ctrlFuncs);
         const requestBody = this.createRequestBody(ctrlFuncs);
@@ -96,7 +98,32 @@ class IntacctApi {
                 'Content-Type': 'x-intacct-xml-request'
             }
         });
+        
+        let parsedPayload;
+        const rawPayload = result.payload.toString();
 
+        try {
+            parsedPayload = JSON.parse(result.payload.toString());
+        } catch (err) {
+            // Errors come back in XML.
+            try {
+                parsedPayload = await requestUtil.parseString(rawPayload);
+                throwError('Request Error', errormessage(reach(parsedPayload, 'response.errormessage'))[0]);
+            } catch (e) {
+                e.rawPayload = rawPayload;
+                throw e;
+            }
+        }
+        
+        return {
+            functions: funcHash,
+            payload: parsedPayload,
+            rawPayload: rawPayload
+        };
+        
+
+        
+        /*
         let parsedPayload;
         const rawPayload = result.payload.toString();
 
@@ -128,12 +155,8 @@ class IntacctApi {
                 funcHash[resFunc.controlid[0]].process(resFunc);
             });
         }
-
-        return {
-            functions: funcHash,
-            payload: parsedPayload,
-            rawPayload
-        };
+        */
+        
     }
 }
 

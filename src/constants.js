@@ -18,22 +18,22 @@ const FUNCTION_NAMES = [
 
 const FUNCTION_PARAM_DEFAULTS = {
     read: {
-        keys: '', fields: '*', returnFormat: 'xml', docparid: ''
+        keys: '', fields: '*', returnFormat: 'json', docparid: ''
     },
     readByName: {
-        keys: '', fields: '*', returnFormat: 'xml', docparid: ''
+        keys: '', fields: '*', returnFormat: 'json', docparid: ''
     },
     readByQuery: {
-        query: '', fields: '*', pagesize: 100, returnFormat: 'xml', docparid: ''
+        query: '', fields: '*', pagesize: 20, returnFormat: 'json', docparid: ''
     },
     readRelated: {
-        keys: '', fields: '*', relation: '', returnFormat: 'xml'
+        keys: '', fields: '*', relation: '', returnFormat: 'json'
     },
     readReport: {
-        '@returnDef': false, report: '', waitTime: 30, listSeparator: '', pagesize: 100, returnFormat: 'xml'
+        '@returnDef': false, report: '', waitTime: 30, listSeparator: '', pagesize: 100, returnFormat: 'json'
     },
     readView: {
-        filters: '', pagesize: 100, returnFormat: 'xml'
+        filters: '', pagesize: 100, returnFormat: 'json'
     }
 };
 
