@@ -59,7 +59,12 @@ Sets up a control function. It is recommended that you use one of the static fac
 ### .get([path])
 
 If path is given, hoek.reach is used to retrieve the desired property. If path isn't given, the entire `this.data` variable is returned.
-
+```javascript
+// EXAMPLE using ARINVOICE
+const cid1 = IntacctApi.readByQuery({ object: 'ARINVOICE', pagesize: 1 });
+const result1 = await obj.request(cid1);
+let invoices = cid1.get('arinvoice');
+```
 ### .isSuccessful()
 
 Returns a boolean of the contextual control function's resulting success.
