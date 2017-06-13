@@ -96,39 +96,21 @@ class IntacctApi {
                 'Content-Type': 'x-intacct-xml-request'
             }
         });
-
         let parsedPayload;
         const rawPayload = result.payload.toString();
 
         try {
-            parsedPayload = await requestUtil.parseString(rawPayload);
-        } catch (e) {
-            e.rawPayload = rawPayload;
-            throw e;
+            parsedPayload = JSON.parse(result.payload.toString());
+        } catch (err) {
+            // Errors come back in XML.
+            try {
+                parsedPayload = await requestUtil.parseString(rawPayload);
+                throwError('Request Error', errormessage(reach(parsedPayload, 'response.errormessage'))[0]);
+            } catch (e) {
+                e.rawPayload = rawPayload;
+                throw e;
+            }
         }
-
-        const isControlSuccessful = reach(parsedPayload, 'response.control.0.status.0') === 'success';
-
-        if (!isControlSuccessful) {
-            const authErrorData = errormessage(reach(parsedPayload, 'response.errormessage'))[0];
-            throwError('Request Error', authErrorData);
-        }
-
-        const isAuthenticated = reach(parsedPayload, 'response.operation.0.authentication.0.status.0') === 'success';
-
-        if (!isAuthenticated) {
-            const authErrorData = errormessage(reach(parsedPayload, 'response.operation.0.errormessage.0'))[0];
-            throwError('Auth Error', authErrorData);
-        }
-
-        const results = reach(parsedPayload, 'response.operation.0.result');
-
-        if (Array.isArray(results)) {
-            results.forEach((resFunc) => {
-                funcHash[resFunc.controlid[0]].process(resFunc);
-            });
-        }
-
         return {
             functions: funcHash,
             payload: parsedPayload,
