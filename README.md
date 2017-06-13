@@ -72,7 +72,7 @@ Assigns or generates a control id. Caution to not duplicate control ids, duplica
 
 All static functions return an instance of the ControlFunction class with the name defined by the static function's name. All static functions have the same signature: `(params, controlId = null, parse = true)`
 
-Refer to [Intacct's API Documentation](https://developer.intacct.com/wiki/function-reference) for how to understand the parameters needed to make these functions work.
+Refer to [Intacct's API Documentation](https://developer.intacct.com/api/) for how to understand the parameters needed to make these functions work.
 
 * .consolidate(...)
 * .create(...)
