@@ -1,6 +1,7 @@
 const FUNCTION_NAMES = [
     'consolidate',
     'create',
+    'create_sotransaction',
     'delete',
     'getAPISession',
     'getUserPermissions',
