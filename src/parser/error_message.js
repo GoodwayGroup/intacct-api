@@ -10,7 +10,13 @@ function errorMessageSingle(err) {
 }
 
 function errormessage(data) {
-    return data.map(errorMessageSingle);
+    let out;
+    if (data && data instanceof Array) {
+        out = data.map(errorMessageSingle);
+    } else if (data) {
+        out = data;
+    }
+    return out;
 }
 
 export default {
