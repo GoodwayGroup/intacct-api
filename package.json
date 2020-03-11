@@ -1,6 +1,6 @@
 {
   "name": "intacct-api",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Intacct API Access Library",
   "engines": {
     "node": ">=4"
