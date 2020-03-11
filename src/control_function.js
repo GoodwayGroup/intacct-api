@@ -58,6 +58,7 @@ class ControlFunction {
         } else {
             this.data = result.data;
         }
+        this.key = result.key;
     }
 
     isSuccessful() {
