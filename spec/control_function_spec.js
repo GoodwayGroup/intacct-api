@@ -109,4 +109,19 @@ describe('ControlFunction class', () => {
 
     it('#process() with no parse');
     it('#process() with error');
+
+    it('stores key after #process()', () => {
+        const obj = new ControlFunction('test');
+        const key = '123456';
+        obj.process({
+            key,
+            status: ['success'],
+            function: ['test'],
+            controlid: [obj.controlId],
+            data: {
+                prop: 'val'
+            }
+        });
+        expect(obj.key).toEqual(key);
+    });
 });
