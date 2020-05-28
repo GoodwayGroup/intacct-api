@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "description": "Intacct API Access Library",
   "engines": {
-    "node": ">=4"
+    "node": ">=10"
   },
   "main": "./dist/index.js",
   "scripts": {
