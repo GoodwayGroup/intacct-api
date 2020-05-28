@@ -117,7 +117,7 @@ class IntacctApi {
         const isAuthenticated = reach(parsedPayload, 'response.operation.0.authentication.0.status.0') === 'success';
 
         if (!isAuthenticated) {
-            const authErrorData = errormessage(reach(parsedPayload, 'response.operation.0.errormessage.0'))[0];
+            const authErrorData = errormessage(reach(parsedPayload, 'response.operation.0.errormessage'))[0];
             throwError('Auth Error', authErrorData);
         }
 
